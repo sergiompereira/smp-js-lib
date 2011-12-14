@@ -635,11 +635,15 @@
 	smp.date = _createModule();
 	
 	//static methods
-	smp.date.print = function() {
+	smp.date.print = function(date) {
 		
 		function pad2(number) { return (number < 10 ? '0' : '') + number };
 		
 		var dt = new Date();
+		if(date){
+			dt = date;
+		}
+		
 		var dtstring = dt.getFullYear()
 			+ '-' + pad2(dt.getMonth()+1)
 			+ '-' + pad2(dt.getDate())
@@ -650,6 +654,59 @@
 			return dtstring;
 	}
 	
+	
+	smp.date.getClock = function(miliseconds, leftzero)
+	{
+		var c,s,m,h,d,r;
+		var roundfnc;
+		if(miliseconds >= 0){
+			roundfnc = Math.floor;
+		}else{
+			roundfnc = Math.ceil;
+		}
+			d = roundfnc(miliseconds / 86400000);
+			r = miliseconds % 86400000;
+			h = roundfnc(r / 3600000);
+			r = r % 3600000;
+			m = roundfnc(r / 60000);
+			r = r % 60000;
+			s = roundfnc(r / 1000);
+			r = r % 1000;
+			c = roundfnc(r / 10);
+			
+			d = d.toString();
+			h = h.toString();
+			m = m.toString();
+			s = s.toString();
+			c = c.toString().substr(0,2);
+			
+			if(leftzero){
+				if (c.length == 1) {
+					c = "0" + c;
+				}
+				if (s.length == 1) {
+					s = "0" + s;
+				}
+				if (m.length == 1) {
+					m = "0" + m;
+				}
+				if (h.length == 1) {
+					h = "0" + h;
+				}
+				if (d.length == 1) {
+					d = "0" + d;
+				}
+			}
+			
+			return {
+					day:d,
+					hour:h,
+					min:m,
+					sec:s,
+					csec:c
+					};
+
+	}
 	
 	//////////////////
 	/**
