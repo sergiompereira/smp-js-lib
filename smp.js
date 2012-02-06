@@ -731,31 +731,41 @@
 			function CustomEvent(){
 				this.name = "";
 				this.data = {};
+				this.target = undefined;
 			}
 			
-			function _dispatchEvent(evt, data)
+			function _dispatchEvent(name, data)
 			{
 				var j, eventObj;
 				for(j=0; j<listeners.length; j++){
-					if(listeners[j][0] == evt){
+					if(listeners[j][0] == name){
 						if(typeof listeners[j][1] === "function"){
 							eventObj = new CustomEvent();
-							eventObj.name = evt;
+							eventObj.name = name;
 							eventObj.data = data;
-							listeners[j][1](eventObj);
+							eventObj.target = listeners[j][2];
+							if(eventObj.target !== undefined){
+								listeners[j][1].apply(eventObj.target, eventObj);
+							}else{
+								listeners[j][1](eventObj);
+							}
+							
+							//do not return or break
+							//because there might be other listeners with the same callback
+							
 						}
 					}
 				}
 			}
 			
 			//protected
-			function _addEventListener(evt,callback){
-				listeners.push([evt,callback]);
+			function _addEventListener(name,callback, context){
+				listeners.push([name,callback, context]);
 			}
-			function _removeEventListener(evt, callback){
+			function _removeEventListener(name, callback){
 				var j;
 				for(j=0; j<listeners.length; j++){
-					if(listeners[j][0] == evt && listeners[j][1] == callback){
+					if(listeners[j][0] == name && listeners[j][1] == callback){
 						listeners.splice(j,1);
 						//no break is used because there might have been redundancy of listeners
 					}
