@@ -202,6 +202,7 @@
 	*/
 	smp.each = function(obj,fnc,context){
 		if(obj === null || obj === undefined) return;
+		if(context === undefined) context = this;
 		if(typeof obj == "object"){
 			if(obj.length !== null && obj.length !== undefined){
 				var length = obj.length;
@@ -597,9 +598,9 @@
 	smp.string.trim = function(str)
 	{
 		var l=0; var r=str.length -1;
-		while(l < str.length && str[l] == ' ')
+		while(l < str.length && smp.string.isWhitespace(str[l]))
 		{	l++; }
-		while(r > l && str[r] == ' ')
+		while(r > l && smp.string.isWhitespace(str[r]))
 		{	r-=1;	}
 		return str.substring(l, r+1);
 	}
