@@ -235,6 +235,35 @@
 		}
 	}
 	
+	smp.pullout = function(obj,fnc,context){
+		if(obj === null || obj === undefined) return;
+		if(context === undefined) context = this;
+		if(typeof obj == "object"){
+			if(obj.length !== null && obj.length !== undefined){
+				var i,length = obj.length,item;
+				for(i=0;i<length;i++){
+					item = obj[i];
+					if(fnc.call(context,i,item,obj) == false){
+						obj.splice(i,1);
+						length = obj.length;
+						i-=1;
+					}	
+				}
+				
+			}else{
+				var key;
+				for(key in obj){
+					//if (context.fnc === "function") {
+						if(fnc.call(context, key, obj[key], obj) == false){
+							obj[key] = null;
+							delete obj[key];
+						}
+					//}
+				}
+			}
+		}
+	}
+	
 	///////////////
 	/**
 	* CLASS
