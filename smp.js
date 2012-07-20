@@ -133,9 +133,11 @@
 	
 	
 	//static methods
- 
+	smp.createNamespace = _createNamespace;
+	smp.createModule = _createModule;
 	smp.clone = _clone;
 	smp.extend = _extend;
+	
 	/**
 	*	@see	: also json2.js
 	*/
@@ -784,6 +786,10 @@
 	  // done!
 	  return password;
 
+	}
+	
+	smp.string.stripHTML = function(str){
+		return str.replace(/<(?:.|\s)*?>/g, ' ');
 	}
 	
 	//////////////////
