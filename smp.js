@@ -879,113 +879,69 @@
 	*/
 	
 	_createNamespace("smp.events");
-	smp.events = _createModule();
-	
-	
-	var EventDispatcher = (function(){
 
-		var Constructor;
-	
-		Constructor = function()
-		{
-			var listeners = [];
-			
-			
-			//private
-			//event object
-			function CustomEvent(){
-				this.name = "";
-				this.data = {};
-				this.target = undefined;
-			}
-			
-			function _dispatchEvent(name, data)
-			{
-				var j, eventObj;
-				for(j=0; j<listeners.length; j++){
-					if(listeners[j][0] == name){
-						if(typeof listeners[j][1] === "function"){
-							eventObj = new CustomEvent();
-							eventObj.name = name;
-							eventObj.data = data;
-							eventObj.target = listeners[j][2];
-							if(eventObj.target !== undefined){
-								listeners[j][1].apply(eventObj.target, eventObj);
-							}else{
-								listeners[j][1](eventObj);
-							}
-							
-							//do not return or break
-							//because there might be other listeners with the same callback
-							
-						}
-					}
-				}
-			}
-			
-			//protected
-			function _addEventListener(name,callback, context){
-				listeners.push([name,callback, context]);
-			}
-			function _removeEventListener(name, callback){
-				var j;
-				for(j=0; j<listeners.length; j++){
-					if(listeners[j][0] == name && listeners[j][1] == callback){
-						listeners.splice(j,1);
-						//no break is used because there might have been redundancy of listeners
-					}
-				}
-			}
-			
-			function _extend(inheritedObj){
-				var inheritedObj = inheritedObj || {};
-				var i, 
-					toString = Object.prototype.toString, 
-					astr = "[object Array]";
+	smp.events.extend = function(subclass){
+		
+		(function(){
+			 
+			 	var listeners = [];
 				
+			 	//private
+				//event object
+				function CustomEvent(){
+					this.name = "";
+					this.data = {};
+					this.target = undefined;
+				}
 				
-				function _extendCycle(superObj, inheritedObj){
-					
-					for(i in superObj){
-						if(superObj.hasOwnProperty(i)){
-							if(typeof superObj[i] === "object"){
-								inheritedObj[i] = (toString.call(superObj[i])===astr) ? [] : {};
-								_extendCycle(superObj[i], inheritedObj[i]);
-							}else{
-								inheritedObj[i] = superObj[i];
+				function _dispatchEvent(name, data)
+				{
+					var j, eventObj;
+					for(j=0; j<listeners.length; j++){
+						if(listeners[j][0] == name){
+							if(typeof listeners[j][1] === "function"){
+								eventObj = new CustomEvent();
+								eventObj.name = name;
+								eventObj.data = data;
+								eventObj.target = listeners[j][2];
+								if(eventObj.target !== undefined){
+									listeners[j][1].apply(eventObj.target, eventObj);
+								}else{
+									listeners[j][1](eventObj);
+								}
+								//do not return or break
+								//because there might be other listeners with the same callback
+								
 							}
 						}
 					}
-					return inheritedObj;
 				}
 				
-				_extendCycle(this,inheritedObj);
+				//protected
+				function _addEventListener(name,callback, context){
+					listeners.push([name,callback, context]);
+				}
+				function _removeEventListener(name, callback){
+					var j;
+					for(j=0; j<listeners.length; j++){
+						if(listeners[j][0] == name && listeners[j][1] == callback){
+							listeners.splice(j,1);
+							//no break is used because there might have been redundancy of listeners
+						}
+					}
+				}
 				
-				return inheritedObj;
-			
-			}
-			
-			//public
-			this.addEventListener = _addEventListener;
-			this.removeEventListener = _removeEventListener;
-			this.dispatchEvent = _dispatchEvent;
-			this.extend = _extend;
+				//public
+				this.addEventListener = _addEventListener;
+				this.removeEventListener = _removeEventListener;
+				this.dispatchEvent = _dispatchEvent;
 				
-				
-		};
+			}).apply(subclass);
 		
-		return Constructor;
-		
-	}());
-	var eventDispatcher = new EventDispatcher();
+		//console.dir(subclass)
+	}
 	
-	//static methods
-	smp.events.create = function() {
-		return new EventDispatcher();
-	}
-	smp.events.extend = function(obj) {
-		obj = eventDispatcher.extend(obj);
-	}
+	
 	
 	//////////////////
 	/**
