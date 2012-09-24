@@ -271,10 +271,10 @@
 	* CLASS
 	*/
 	
-	_createNamespace("smp.class");
-	smp.class = _createModule();
+	_createNamespace("smp.classe");
+	smp.classe = _createModule();
 	
-	smp.class.extend = (function(){
+	smp.classe.extend = (function(){
 	
 		var fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 		
