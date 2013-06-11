@@ -505,13 +505,14 @@
 		(function(){
 			 
 			 	var listeners = [];
-				
+				var owner = subclass;
 			 	//private
 				//event object
 				function CustomEvent(){
 					this.name = "";
 					this.data = {};
-					this.target = undefined;
+					this.target = owner;
+					this.currentTarget = owner;
 				}
 				
 				function _dispatchEvent(name, data)
