@@ -499,6 +499,26 @@
 	*/
 	
 	_createNamespace("smp.events");
+    
+    smp.events.attach = function(element, type, handler){
+		if (typeof element.addEventListener === "function"){
+			element.addEventListener(type, handler, false);
+		}else if (element.attachEvent){
+			element.attachEvent('on' + type, handler);
+		}else{
+			element["on" + type] = handler;
+		}
+	}
+
+	smp.events.detach = function(element, type, handler){
+		if (element.removeEventListener){
+			element.removeEventListener(type, handler, false);
+		}else if (element.detachEvent){
+			element.detachEvent('on' + type, handler);
+		}else{
+			element["on" + type] = null;
+		}
+	}
 
 	smp.events.extend = function(subclass){
 		
