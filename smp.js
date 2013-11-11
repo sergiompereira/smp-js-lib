@@ -237,6 +237,9 @@
 		}
 	}
 	
+    /**
+    *   remove an obj from a context
+    */
 	smp.pullout = function(obj,fnc,context){
 		if(obj === null || obj === undefined) return;
 		if(context === undefined) context = this;
@@ -265,6 +268,23 @@
 			}
 		}
 	}
+    
+    /**
+    *   remove duplicates from an array
+    */
+    smp.unique = function removeDuplicates(arr){
+        var i,j;
+        for(i=0; i<arr.length; i++){
+            for(j=i+1; j<arr.length; j++){
+                if(arr[i]===arr[j]){
+                    arr.splice(i,1);
+                    j--;
+                    i--;
+                }
+            }
+        }
+        return arr;
+    }
 	
 	///////////////
 	/**
@@ -613,5 +633,37 @@
 		}
         return (qsParm);
 	}
-	
+    
+    ////////////////////////
+    /**
+    * DOM
+    */
+    
+    _createNamespace('smp.dom');
+    smp.dom = _createModule();
+    
+    (function(){ 
+    
+        function hasClass(el, name){
+            return new RegExp("(?:^|\\s+)" + name + "(?:\\s+|$)").test(el.className);
+        }
+        function addClass(el, name){
+            if (!hasClass(el, name)) {
+                el.className = el.className ? [el.className, name].join(' ') : name;
+            }
+        }
+        function removeClass(el, name){
+            if (hasClass(el, name)) {
+                var c = el.className;
+                el.className = c.replace(new RegExp("(?:^|\\s+)" + name + "(?:\\s+|$)", "g"), "");
+              } 
+        }
+        
+        //public
+        this.hasClass = hasClass;
+        this.addClass = addClass;
+        this.removeClass = removeClass;
+    
+    }).apply(smp.dom);
+    
 }());
