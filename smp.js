@@ -666,4 +666,25 @@
     
     }).apply(smp.dom);
     
+	
+	//////////////////////////
+	/**
+    * NET
+    */
+    
+    _createNamespace('smp.net');
+    smp.net = _createModule();
+	
+	smp.net.JsonP = function(src, callback)
+    {
+		var _callabackName = 'smplib'+(Math.round(Math.random()*9999)).toString(); 
+		window[_callabackName] = function(data){callback(data);};
+		
+	        var headID = document.getElementsByTagName("head")[0];         
+	        var newScript = document.createElement('script');
+	        newScript.type = 'text/javascript';
+	        newScript.src = src+'?jsonp='+_callabackName;
+	        headID.appendChild(newScript);   
+	}
+	
 }());
